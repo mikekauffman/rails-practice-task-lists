@@ -19,7 +19,6 @@ feature 'Tasks' do
 
     expect(page).to have_content("Something important")
     expect(page).to have_content("Task was created successfully!")
-    expect(page).to have_content("2 days")
     expect(page).to have_no_content("Nothing here to see!")
   end
 
@@ -34,6 +33,22 @@ feature 'Tasks' do
     expect(page).to have_content("Task was completed successfully!")
     expect(page).to have_no_content("Some task")
     expect(task.reload).to eq(task)
+  end
+
+  scenario 'User can update tasks' do
+    user = create_user email: "user@example.com"
+    task_list = TaskList.create!(name: "Work List")
+    task_list.tasks.create!(description: "Some task", due_date: 2.days.from_now)
+
+    login(user)
+    click_on "Some task"
+
+    fill_in "Description", with: "Some editted task"
+    click_on "Update Task"
+
+    expect(page).to have_content("Some editted task")
+    expect(page).to have_content("Task was updated successfully!")
+    expect(page).to have_no_content("Some task")
   end
 
 end

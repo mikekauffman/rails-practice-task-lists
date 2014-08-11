@@ -15,10 +15,22 @@ class TasksController < ApplicationController
     end
   end
 
+  def edit
+    @task = Task.find(params[:id])
+    @task_list = TaskList.find(params[:task_list_id])
+  end
+
   def update
-    @task = @task_list.tasks.find(params[:id])
-    @task.update_attributes(completed: true)
-    redirect_to root_path, notice: "Task was completed successfully!"
+    if params[:commit] == 'Complete'
+      @task = @task_list.tasks.find(params[:id])
+      @task.update_attributes(completed: true)
+      redirect_to root_path, notice: "Task was completed successfully!"
+    else
+      task = Task.find(params[:id])
+      task.update_attributes(params.require(:task).permit(:description, :due_date))
+      redirect_to root_path, notice: "Task was updated successfully!"
+    end
+
   end
 
   private
