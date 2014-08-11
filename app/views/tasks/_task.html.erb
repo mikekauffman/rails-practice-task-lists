@@ -1,5 +1,5 @@
 <div class="task">
-  <%= form_for [task.task_list, task] do |f| %>
+  <%= form_for [:complete, task.task_list, task] do |f| %>
     <%= f.submit "Complete", class: "complete-button" %>
   <% end %>
   <span class="task-description"><%= link_to task.description, edit_task_list_task_path(task.task_list, task) %></span>
